@@ -1,21 +1,19 @@
 import React from "react";
 
-export default function Step({ step, handleStepMinus, handleStepPlus }) {
+export default function Step({ step, handleStepChange }) {
+    const handleChange = (e) => {
+        handleStepChange(e);
+    };
     return (
         <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-            <button
-                style={{ width: "50px", height: "40px", fontSize: "20px" }}
-                onClick={() => handleStepMinus()}
-            >
-                -
-            </button>
-            <p>Step: {step}</p>
-            <button
-                style={{ width: "50px", height: "40px", fontSize: "20px" }}
-                onClick={() => handleStepPlus()}
-            >
-                +
-            </button>
+            <input
+                type="range"
+                min={1}
+                max={10}
+                value={step}
+                onChange={handleChange}
+            />
+            <p>{step}</p>
         </div>
     );
 }

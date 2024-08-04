@@ -8,6 +8,14 @@ export default function Counter() {
     const date = new Date("june 24 2024");
     date.setDate(date.getDate() + given.count);
 
+    const handleStepChange = (e) => {
+        setGiven((prev) => ({ ...prev, step: +e.target.value }));
+    };
+
+    const handleCountChange = (e) => {
+        setGiven((prev) => ({ ...prev, count: +e.target.value }));
+    };
+
     return (
         <div
             style={{
@@ -18,16 +26,7 @@ export default function Counter() {
                 alignItems: "center",
             }}
         >
-            <Step
-                step={given.step}
-                handleStepMinus={() =>
-                    given.step > 1 &&
-                    setGiven((prev) => ({ ...prev, step: prev.step - 1 }))
-                }
-                handleStepPlus={() =>
-                    setGiven((prev) => ({ ...prev, step: prev.step + 1 }))
-                }
-            />
+            <Step step={given.step} handleStepChange={handleStepChange} />
             <Count
                 count={given.count}
                 handleCountMinus={() =>
@@ -42,9 +41,14 @@ export default function Counter() {
                         count: prev.count + prev.step,
                     }))
                 }
+                handleCountChange={handleCountChange}
             />
             <br />
-            <Message count={given.count} date={date} />
+            <Message
+                count={given.count}
+                date={date}
+                handleReset={() => setGiven({ step: 1, count: 0 })}
+            />
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Message({ count, date }) {
+export default function Message({ count, date, handleReset }) {
     return (
         <p>
             <span>
@@ -11,6 +11,9 @@ export default function Message({ count, date }) {
                     : `${Math.abs(count)} days ago was `}
             </span>
             <span>{date.toDateString()}</span>
+            <br />
+            <br />
+            {count !== 0 && <button onClick={handleReset}>Reset</button>}
         </p>
     );
 }

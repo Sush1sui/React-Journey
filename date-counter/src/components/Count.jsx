@@ -1,6 +1,14 @@
 import React from "react";
 
-export default function Count({ count, handleCountMinus, handleCountPlus }) {
+export default function Count({
+    count,
+    handleCountMinus,
+    handleCountPlus,
+    handleCountChange,
+}) {
+    const handleChange = (e) => {
+        handleCountChange(e);
+    };
     return (
         <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
             <button
@@ -9,7 +17,7 @@ export default function Count({ count, handleCountMinus, handleCountPlus }) {
             >
                 -
             </button>
-            <p>Count: {count}</p>
+            <input type="text" value={count} onChange={handleCountChange} />
             <button
                 style={{ width: "50px", height: "40px", fontSize: "20px" }}
                 onClick={() => handleCountPlus()}
