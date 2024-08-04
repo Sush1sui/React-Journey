@@ -1,4 +1,5 @@
 import React from "react";
+import Order from "./Order";
 
 export default function Footer() {
     const hour = new Date().getHours();
@@ -8,7 +9,15 @@ export default function Footer() {
 
     return (
         <footer className="footer">
-            {new Date().toLocaleTimeString()}. We're currently open!
+            {isOpen ? (
+                <Order closeHour={closeHour} />
+            ) : (
+                <p>
+                    We're happy to welcome you between {openHour}:00 and{" "}
+                    {closeHour}
+                    :00.
+                </p>
+            )}
         </footer>
     );
 }
