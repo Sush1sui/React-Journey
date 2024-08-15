@@ -65,6 +65,7 @@ function App() {
 
             {selectedFriend && (
                 <FormSplitBill
+                    key={selectedFriend.id}
                     friend={selectedFriend}
                     handleSplitBill={handleSplitBill}
                 />
