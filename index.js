@@ -15,6 +15,17 @@ function binarySearch(arr, target, start = 0, end) {
     if (arr[mid] > target) return binarySearch(arr, target, start, mid - 1);
     else return binarySearch(arr, target, mid + 1, end);
 }
+// console.log(binarySearch(oddArray, 1212));
+// console.log(binarySearch(evenArray, 1212));
 
-console.log(binarySearch(oddArray, 1212));
-console.log(binarySearch(evenArray, 1212));
+function nLogN(n) {
+    const y = n;
+    while (n > 1) {
+        n = Math.floor(n / 2);
+        for (let i = 1; i <= y; i++) {
+            console.log(i);
+        }
+    }
+}
+
+console.log(nLogN(100));
