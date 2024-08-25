@@ -1,6 +1,12 @@
 import React from "react";
 
-export default function Box({ isOpen, toggleOpen, children }) {
+type Props = {
+    isOpen: boolean;
+    toggleOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    children: React.ReactNode;
+};
+
+export default function Box({ isOpen, toggleOpen, children }: Props) {
     return (
         <div className="box">
             <button
