@@ -1,7 +1,15 @@
 import React from "react";
+import { MovieData } from "../models/models";
 
-export default function Navbar({ movies, query, handleSetQuery }) {
-    const handleChange = (e) => handleSetQuery(e.target.value);
+type Props = {
+    movies: MovieData[];
+    query: string;
+    handleSetQuery: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export default function Navbar({ movies, query, handleSetQuery }: Props) {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        handleSetQuery(e.target.value);
     return (
         <nav className="nav-bar">
             <div className="logo">

@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+type Props = {
+    maxRating: number;
+    color: string;
+    size: number;
+};
 
 const containerStyle = {
     display: "flex",
@@ -56,9 +61,9 @@ export default function StarRating({
     maxRating = 5,
     color = "#fcc419",
     size = 48,
-}) {
-    const [rating, setRating] = useState(0);
-    const [hoverRating, setHoverRating] = useState(0);
+}: Props) {
+    const [rating, setRating] = useState<number>(0);
+    const [hoverRating, setHoverRating] = useState<number>(0);
 
     const textStyle = {
         lineHeight: "0",
@@ -89,7 +94,16 @@ export default function StarRating({
     );
 }
 
-function Star({ onRate, full, onHoverIn, onHoverOut, color, size }) {
+type StarProp = {
+    onRate: () => void;
+    full: boolean;
+    onHoverIn: () => void;
+    onHoverOut: () => void;
+    color: string;
+    size: number;
+};
+
+function Star({ onRate, full, onHoverIn, onHoverOut, color, size }: StarProp) {
     return (
         <span
             role="button"

@@ -1,10 +1,12 @@
+import React from "react";
 import { useState } from "react";
 import Navbar from "./components/Navbar";
 import Box from "./components/Box";
 import List from "./components/List";
 import Summary from "./components/Summary";
+import { MovieData, WatchedData } from "./models/models";
 
-const tempMovieData = [
+const tempMovieData: MovieData[] = [
     {
         imdbID: "tt1375666",
         Title: "Inception",
@@ -25,7 +27,7 @@ const tempMovieData = [
     },
 ];
 
-const tempWatchedData = [
+const tempWatchedData: WatchedData[] = [
     {
         imdbID: "tt1375666",
         Title: "Inception",
@@ -46,19 +48,23 @@ const tempWatchedData = [
     },
 ];
 
-const average = (arr) =>
+const average = (arr: number[]) =>
     arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-    const [query, setQuery] = useState("");
-    const [movies, setMovies] = useState(tempMovieData);
-    const [watched, setWatched] = useState(tempWatchedData);
-    const [isOpen1, setIsOpen1] = useState(true);
-    const [isOpen2, setIsOpen2] = useState(true);
+    const [query, setQuery] = useState<string>("");
+    const [movies, setMovies] = useState<MovieData[]>(tempMovieData);
+    const [watched, setWatched] = useState<WatchedData[]>(tempWatchedData);
+    const [isOpen1, setIsOpen1] = useState<boolean>(true);
+    const [isOpen2, setIsOpen2] = useState<boolean>(true);
 
-    const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
-    const avgUserRating = average(watched.map((movie) => movie.userRating));
-    const avgRuntime = average(watched.map((movie) => movie.runtime));
+    const avgImdbRating: number = average(
+        watched.map((movie) => movie.imdbRating)
+    );
+    const avgUserRating: number = average(
+        watched.map((movie) => movie.userRating)
+    );
+    const avgRuntime: number = average(watched.map((movie) => movie.runtime));
 
     return (
         <>
@@ -66,7 +72,7 @@ export default function App() {
 
             <main className="main">
                 <Box isOpen={isOpen1} toggleOpen={setIsOpen1}>
-                    {isOpen1 && <List isWatchedList={false} movies={movies} />}
+                    {isOpen1 && <List movies={movies} />}
                 </Box>
 
                 <Box isOpen={isOpen2} toggleOpen={setIsOpen2}>
@@ -79,7 +85,7 @@ export default function App() {
                                 avgUserRating={avgUserRating}
                             />
 
-                            <List isWatchedList={true} movies={watched} />
+                            <List movies={watched} />
                         </>
                     )}
                 </Box>
