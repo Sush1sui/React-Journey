@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MovieData } from "../models/models";
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
 export default function Navbar({ movies, query, handleSetQuery }: Props) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         handleSetQuery(e.target.value);
+
     return (
         <nav className="nav-bar">
             <div className="logo">
