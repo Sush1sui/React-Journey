@@ -4,7 +4,7 @@ import Navbar from "./components/Navbar";
 import Box from "./components/Box";
 import List from "./components/List";
 import Summary from "./components/Summary";
-import { MovieData, WatchedData } from "./models/models";
+import { MovieDetailsType, WatchedData } from "./models/models";
 import Loader from "./components/Loader";
 import ErrorMessage from "./components/ErrorMessage";
 import MovieDetails from "./components/MovieDetails";
@@ -16,19 +16,48 @@ const average = (arr: number[]) =>
 
 export default function App() {
     const [query, setQuery] = useState<string>("");
-    const [movies, setMovies] = useState<MovieData[]>([]);
+    const [movies, setMovies] = useState<MovieDetailsType[]>([]);
     const [watched, setWatched] = useState<WatchedData[]>([]);
     const [isOpen1, setIsOpen1] = useState<boolean>(true);
     const [isOpen2, setIsOpen2] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
-    const [selectedId, setSelectedId] = useState<string>("tt1375666");
+    const [selectedId, setSelectedId] = useState<string>("");
 
     const handleSelectMovie = (id: string) => {
         setSelectedId((selectedId) => (id === selectedId ? "" : id));
     };
 
     const handleCloseMovie = () => setSelectedId("");
+
+    const handleAddWatched = (movie: WatchedData) => {
+        setWatched((w) => {
+            // find if movie existed in watched list
+            const existingMovieIndex = w.findIndex(
+                (m) => m.imdbID === movie.imdbID
+            );
+
+            // if movie existed in watched list
+            if (existingMovieIndex !== -1) {
+                // make new copy of watched list
+                const updatedWatched = [...w];
+
+                // updated the watched movie
+                // using index of the existing movie
+                updatedWatched[existingMovieIndex] = {
+                    ...updatedWatched[existingMovieIndex],
+                    userRating: movie.userRating,
+                };
+                return updatedWatched;
+            }
+
+            return [...w, movie];
+        });
+    };
+
+    const handleDeleteWatched = (id: string) => {
+        setWatched((w) => w.filter((m) => m.imdbID !== id));
+    };
 
     useEffect(() => {
         async function fetchMovies() {
@@ -68,13 +97,16 @@ export default function App() {
         fetchMovies();
     }, [query]);
 
-    const avgImdbRating: number = average(
-        watched.map((movie) => movie.imdbRating)
+    const avgImdbRating: number = parseFloat(
+        average(watched.map((movie) => movie.imdbRating)).toFixed(2)
     );
-    const avgUserRating: number = average(
-        watched.map((movie) => movie.userRating)
+
+    const avgUserRating: number = parseFloat(
+        average(watched.map((movie) => movie.userRating)).toFixed(2)
     );
-    const avgRuntime: number = average(watched.map((movie) => movie.runtime));
+    const avgRuntime: number = Math.ceil(
+        average(watched.map((movie) => movie.Runtime))
+    );
 
     return (
         <>
@@ -97,6 +129,8 @@ export default function App() {
                         <MovieDetails
                             selectedId={selectedId}
                             onCloseMovie={handleCloseMovie}
+                            onAddWatched={handleAddWatched}
+                            watchedMovies={watched}
                         />
                     ) : (
                         isOpen2 && (
@@ -111,6 +145,7 @@ export default function App() {
                                 <List
                                     movies={watched}
                                     onSelectMovie={handleSelectMovie}
+                                    onDeleteWatched={handleDeleteWatched}
                                 />
                             </>
                         )

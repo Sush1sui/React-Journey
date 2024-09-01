@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MovieDetailsType } from "../models/models";
+import { MovieDetailsType, WatchedData } from "../models/models";
 import Loader from "./Loader";
 import StarRating from "./StarRating";
 import ErrorMessage from "./ErrorMessage";
@@ -7,19 +7,31 @@ import ErrorMessage from "./ErrorMessage";
 type Props = {
     selectedId: string;
     onCloseMovie: () => void;
+    onAddWatched: (movie: WatchedData) => void;
+    watchedMovies: WatchedData[];
 };
 
 const key = import.meta.env.VITE_OMDB_API_KEY as string;
 
-export default function MovieDetails({ selectedId, onCloseMovie }: Props) {
+export default function MovieDetails({
+    selectedId,
+    onCloseMovie,
+    onAddWatched,
+    watchedMovies,
+}: Props) {
     const [movie, setMovie] = useState<MovieDetailsType | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+    const [rating, setRating] = useState<number>(0);
 
     useEffect(() => {
         async function getMovieDetails() {
             try {
                 setIsLoading(true);
+                setMovie(null);
+                setRating(0);
+                setError("");
+
                 const res = await fetch(
                     `http://www.omdbapi.com/?apikey=${key}&i=${selectedId}`
                 );
@@ -46,7 +58,16 @@ export default function MovieDetails({ selectedId, onCloseMovie }: Props) {
         getMovieDetails();
     }, [selectedId]);
 
-    if (!movie) return <ErrorMessage message="Failed to fetch movie" />;
+    useEffect(() => {
+        const watched = watchedMovies.find((m) => selectedId === m.imdbID);
+        if (watched) {
+            setRating(watched.userRating);
+        }
+    }, [selectedId, watchedMovies]);
+
+    if (error.length) return <ErrorMessage message="Failed to fetch movie" />;
+
+    if (isLoading || !movie) return <Loader />;
 
     const {
         Title: title,
@@ -61,7 +82,16 @@ export default function MovieDetails({ selectedId, onCloseMovie }: Props) {
         Genre: genre,
     } = movie;
 
-    if (isLoading) return <Loader />;
+    const handleAdd = () => {
+        const newWatchedMovie: WatchedData = {
+            ...movie,
+            userRating: rating,
+            imdbRating: Number(movie.imdbRating),
+            Runtime: Number(movie.Runtime.split(" ").at(0)),
+        };
+        onAddWatched(newWatchedMovie);
+        onCloseMovie();
+    };
 
     return (
         <div className="details">
@@ -84,7 +114,18 @@ export default function MovieDetails({ selectedId, onCloseMovie }: Props) {
 
             <section>
                 <div className="rating">
-                    <StarRating maxRating={10} size={24} />
+                    <StarRating
+                        maxRating={10}
+                        size={24}
+                        onSetRating={setRating}
+                        defaultRating={rating}
+                    />
+
+                    {rating > 0 && (
+                        <button className="btn-add" onClick={handleAdd}>
+                            + Add to list
+                        </button>
+                    )}
                 </div>
                 <p>
                     <em>{plot}</em>

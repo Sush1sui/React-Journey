@@ -1,8 +1,8 @@
 import React from "react";
-import { MovieData } from "../models/models";
+import { MovieDetailsType, WatchedData } from "../models/models";
 
 type Props = {
-    movie: MovieData;
+    movie: MovieDetailsType | WatchedData;
     children: React.ReactNode;
     onSelectMovie: (id: string) => void;
 };

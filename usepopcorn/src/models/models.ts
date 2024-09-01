@@ -5,16 +5,6 @@ export type MovieData = {
     Poster: string;
 };
 
-export type WatchedData = {
-    imdbID: string;
-    Title: string;
-    Year: string;
-    Poster: string;
-    runtime: number;
-    imdbRating: number;
-    userRating: number;
-};
-
 export type MovieDetailsType = {
     Actors: string;
     Awards: string;
@@ -45,3 +35,10 @@ export type MovieDetailsType = {
     imdbRating: string;
     imdbVotes: string;
 };
+
+export interface WatchedData
+    extends Omit<MovieDetailsType, "imdbRating" | "Runtime"> {
+    userRating: number;
+    imdbRating: number;
+    Runtime: number;
+}

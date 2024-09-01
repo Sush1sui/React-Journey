@@ -1,29 +1,45 @@
 import React from "react";
 import Movie from "./Movie";
-import { MovieData, WatchedData } from "../models/models";
+import { MovieDetailsType, WatchedData } from "../models/models";
 
 type Props = {
-    movies: MovieData[] | WatchedData[];
+    movies: MovieDetailsType[] | WatchedData[];
     onSelectMovie: (id: string) => void;
+    onDeleteWatched?: (id: string) => void;
 };
 
-export default function List({ movies, onSelectMovie }: Props) {
+export default function List({
+    movies,
+    onSelectMovie,
+    onDeleteWatched,
+}: Props) {
     function isWatchedData(
-        movie: MovieData | WatchedData
+        movie: MovieDetailsType | WatchedData
     ): movie is WatchedData {
-        return (movie as WatchedData).runtime !== undefined;
+        return (movie as WatchedData).userRating !== undefined;
     }
+
     return (
         <ul className="list list-movies">
             {movies &&
-                movies.map((movie: MovieData | WatchedData, i: number) => (
-                    <Movie movie={movie} onSelectMovie={onSelectMovie} key={i}>
-                        {!isWatchedData(movie) ? (
+                movies.map((movie: MovieDetailsType | WatchedData, i: number) =>
+                    !isWatchedData(movie) ? (
+                        <Movie
+                            movie={movie}
+                            onSelectMovie={onSelectMovie}
+                            key={i}
+                        >
                             <>
                                 <span>🗓</span>
                                 <span>{movie.Year}</span>
                             </>
-                        ) : (
+                        </Movie>
+                    ) : (
+                        <Movie
+                            movie={movie}
+                            onSelectMovie={onSelectMovie}
+                            key={i}
+                        >
                             <>
                                 <p>
                                     <span>⭐️</span>
@@ -35,12 +51,29 @@ export default function List({ movies, onSelectMovie }: Props) {
                                 </p>
                                 <p>
                                     <span>⏳</span>
-                                    <span>{movie.runtime} min</span>
+                                    <span>{movie.Runtime} min</span>
                                 </p>
+
+                                {onDeleteWatched && (
+                                    <button
+                                        className="btn-delete"
+                                        onClick={(
+                                            e: React.MouseEvent<
+                                                HTMLButtonElement,
+                                                MouseEvent
+                                            >
+                                        ) => {
+                                            e.stopPropagation();
+                                            onDeleteWatched(movie.imdbID);
+                                        }}
+                                    >
+                                        X
+                                    </button>
+                                )}
                             </>
-                        )}
-                    </Movie>
-                ))}
+                        </Movie>
+                    )
+                )}
         </ul>
     );
 }
