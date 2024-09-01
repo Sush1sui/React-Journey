@@ -65,6 +65,15 @@ export default function MovieDetails({
         }
     }, [selectedId, watchedMovies]);
 
+    useEffect(() => {
+        if (!movie?.Title) return;
+        document.title = `Movie | ${movie.Title}`;
+
+        return function () {
+            document.title = "usePopcorn";
+        };
+    }, [movie]);
+
     if (error.length) return <ErrorMessage message="Failed to fetch movie" />;
 
     if (isLoading || !movie) return <Loader />;

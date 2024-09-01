@@ -60,12 +60,16 @@ export default function App() {
     };
 
     useEffect(() => {
+        const controller = new AbortController();
+        let timeoutId: ReturnType<typeof setTimeout>;
+
         async function fetchMovies() {
             try {
                 setIsLoading(true);
                 setError("");
                 const res = await fetch(
-                    `http://www.omdbapi.com/?apikey=${key}&s=${query}`
+                    `http://www.omdbapi.com/?apikey=${key}&s=${query}`,
+                    { signal: controller.signal }
                 );
 
                 if (!res.ok)
@@ -79,7 +83,7 @@ export default function App() {
 
                 setMovies(data.Search);
             } catch (error) {
-                if (error instanceof Error) {
+                if (error instanceof Error && error.name !== "AbortError") {
                     console.log(error);
                     setError(error.message);
                 } else {
@@ -89,12 +93,21 @@ export default function App() {
                 setIsLoading(false);
             }
         }
+
         if (query.length < 3) {
             setMovies([]);
             setError("");
             return;
         }
-        fetchMovies();
+
+        timeoutId = setTimeout(() => {
+            fetchMovies();
+        }, 1000);
+
+        return function () {
+            clearTimeout(timeoutId);
+            controller.abort();
+        };
     }, [query]);
 
     const avgImdbRating: number = parseFloat(
