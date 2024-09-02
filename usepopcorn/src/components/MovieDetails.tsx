@@ -74,6 +74,18 @@ export default function MovieDetails({
         };
     }, [movie]);
 
+    useEffect(() => {
+        const handleKeyPress = (e: KeyboardEvent) => {
+            if (e.code === "Escape") {
+                onCloseMovie();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyPress);
+
+        return () => document.removeEventListener("keydown", handleKeyPress);
+    }, [onCloseMovie]);
+
     if (error.length) return <ErrorMessage message="Failed to fetch movie" />;
 
     if (isLoading || !movie) return <Loader />;
