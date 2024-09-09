@@ -17,7 +17,11 @@ const average = (arr: number[]) =>
 export default function App() {
     const [query, setQuery] = useState<string>("");
     const [movies, setMovies] = useState<MovieDetailsType[]>([]);
-    const [watched, setWatched] = useState<WatchedData[]>([]);
+    const [watched, setWatched] = useState<WatchedData[]>(function () {
+        const storedValue = localStorage.getItem("watched");
+        if (storedValue) return JSON.parse(storedValue);
+        return [];
+    });
     const [isOpen1, setIsOpen1] = useState<boolean>(true);
     const [isOpen2, setIsOpen2] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -58,6 +62,10 @@ export default function App() {
     const handleDeleteWatched = (id: string) => {
         setWatched((w) => w.filter((m) => m.imdbID !== id));
     };
+
+    useEffect(() => {
+        localStorage.setItem("watched", JSON.stringify(watched));
+    }, [watched]);
 
     useEffect(() => {
         const controller = new AbortController();

@@ -23,6 +23,7 @@ export default function MovieDetails({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [rating, setRating] = useState<number>(0);
+    const [avgRating, setAvgRating] = useState<number>(0);
 
     useEffect(() => {
         async function getMovieDetails() {
@@ -57,6 +58,10 @@ export default function MovieDetails({
 
         getMovieDetails();
     }, [selectedId]);
+
+    useEffect(() => {
+        if (movie !== null) setAvgRating(Number(movie.imdbRating));
+    }, [movie]);
 
     useEffect(() => {
         const watched = watchedMovies.find((m) => selectedId === m.imdbID);
@@ -107,10 +112,12 @@ export default function MovieDetails({
         const newWatchedMovie: WatchedData = {
             ...movie,
             userRating: rating,
-            imdbRating: Number(movie.imdbRating),
+            imdbRating: avgRating,
             Runtime: Number(movie.Runtime.split(" ").at(0)),
         };
         onAddWatched(newWatchedMovie);
+
+        setAvgRating((prev) => (prev + rating) / 2);
         onCloseMovie();
     };
 
@@ -128,7 +135,7 @@ export default function MovieDetails({
                     </p>
                     <p>{genre}</p>
                     <p>
-                        <span>⭐</span> {imdbRating} IMDb rating
+                        <span>⭐</span> {avgRating} IMDb rating
                     </p>
                 </div>
             </header>
