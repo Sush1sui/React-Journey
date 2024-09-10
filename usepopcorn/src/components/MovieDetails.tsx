@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MovieDetailsType, WatchedData } from "../models/models";
 import Loader from "./Loader";
 import StarRating from "./StarRating";
@@ -23,7 +23,15 @@ export default function MovieDetails({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
     const [rating, setRating] = useState<number>(0);
-    const [avgRating, setAvgRating] = useState<number>(0);
+    // const [avgRating, setAvgRating] = useState<number>(0);
+
+    const countRef = useRef(0);
+
+    useEffect(() => {
+        if (rating) {
+            countRef.current = countRef.current++;
+        }
+    }, [rating]);
 
     useEffect(() => {
         async function getMovieDetails() {
@@ -59,9 +67,9 @@ export default function MovieDetails({
         getMovieDetails();
     }, [selectedId]);
 
-    useEffect(() => {
-        if (movie !== null) setAvgRating(Number(movie.imdbRating));
-    }, [movie]);
+    // useEffect(() => {
+    //     if (movie !== null) setAvgRating(Number(movie.imdbRating));
+    // }, [movie]);
 
     useEffect(() => {
         const watched = watchedMovies.find((m) => selectedId === m.imdbID);
@@ -112,12 +120,13 @@ export default function MovieDetails({
         const newWatchedMovie: WatchedData = {
             ...movie,
             userRating: rating,
-            imdbRating: avgRating,
+            imdbRating: Number(imdbRating),
             Runtime: Number(movie.Runtime.split(" ").at(0)),
+            countRatinggDecisions: countRef.current,
         };
         onAddWatched(newWatchedMovie);
 
-        setAvgRating((prev) => (prev + rating) / 2);
+        // setAvgRating((prev) => (prev + rating) / 2);
         onCloseMovie();
     };
 
@@ -135,7 +144,7 @@ export default function MovieDetails({
                     </p>
                     <p>{genre}</p>
                     <p>
-                        <span>⭐</span> {avgRating} IMDb rating
+                        <span>⭐</span> {imdbRating} IMDb rating
                     </p>
                 </div>
             </header>

@@ -41,4 +41,5 @@ export interface WatchedData
     userRating: number;
     imdbRating: number;
     Runtime: number;
+    countRatinggDecisions: number;
 }
