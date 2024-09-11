@@ -8,15 +8,16 @@ import { MovieDetailsType, WatchedData } from "./models/models";
 import Loader from "./components/Loader";
 import ErrorMessage from "./components/ErrorMessage";
 import MovieDetails from "./components/MovieDetails";
+import { useMovies } from "./hooks/useMovies";
 
-const key = import.meta.env.VITE_OMDB_API_KEY as string;
+// const key = import.meta.env.VITE_OMDB_API_KEY as string;
 
 const average = (arr: number[]) =>
     arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
     const [query, setQuery] = useState<string>("");
-    const [movies, setMovies] = useState<MovieDetailsType[]>([]);
+    // const [movies, setMovies] = useState<MovieDetailsType[]>([]);
     const [watched, setWatched] = useState<WatchedData[]>(function () {
         const storedValue = localStorage.getItem("watched");
         if (storedValue) return JSON.parse(storedValue);
@@ -24,15 +25,17 @@ export default function App() {
     });
     const [isOpen1, setIsOpen1] = useState<boolean>(true);
     const [isOpen2, setIsOpen2] = useState<boolean>(true);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
+    // const [isLoading, setIsLoading] = useState<boolean>(false);
+    // const [error, setError] = useState<string>("");
     const [selectedId, setSelectedId] = useState<string>("");
+
+    const handleCloseMovie = () => setSelectedId("");
+    // custom hook
+    const { movies, isLoading, error } = useMovies(query);
 
     const handleSelectMovie = (id: string) => {
         setSelectedId((selectedId) => (id === selectedId ? "" : id));
     };
-
-    const handleCloseMovie = () => setSelectedId("");
 
     const handleAddWatched = (movie: WatchedData) => {
         setWatched((w) => {
@@ -66,57 +69,6 @@ export default function App() {
     useEffect(() => {
         localStorage.setItem("watched", JSON.stringify(watched));
     }, [watched]);
-
-    useEffect(() => {
-        const controller = new AbortController();
-        let timeoutId: ReturnType<typeof setTimeout>;
-
-        async function fetchMovies() {
-            try {
-                setIsLoading(true);
-                setError("");
-                const res = await fetch(
-                    `http://www.omdbapi.com/?apikey=${key}&s=${query}`,
-                    { signal: controller.signal }
-                );
-
-                if (!res.ok)
-                    throw new Error(
-                        "Something went wrong with fetching movies"
-                    );
-
-                const data = await res.json();
-
-                if (!data.Search) throw new Error("No movies found");
-
-                setMovies(data.Search);
-            } catch (error) {
-                if (error instanceof Error && error.name !== "AbortError") {
-                    console.log(error);
-                    setError(error.message);
-                } else {
-                    setError("An unknown error has occured");
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        }
-
-        if (query.length < 3) {
-            setMovies([]);
-            setError("");
-            return;
-        }
-
-        timeoutId = setTimeout(() => {
-            fetchMovies();
-        }, 1000);
-
-        return function () {
-            clearTimeout(timeoutId);
-            controller.abort();
-        };
-    }, [query]);
 
     const avgImdbRating: number = parseFloat(
         average(watched.map((movie) => movie.imdbRating)).toFixed(2)
