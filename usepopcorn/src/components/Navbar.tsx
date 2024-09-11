@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MovieData } from "../models/models";
+import { useKey } from "../hooks/useKey";
 
 type Props = {
     movies: MovieData[];
@@ -10,18 +11,11 @@ type Props = {
 export default function Navbar({ movies, query, handleSetQuery }: Props) {
     const inputEl = useRef<HTMLInputElement>(null);
 
-    useEffect(() => {
-        function callback(e: KeyboardEvent) {
-            if (document.activeElement === inputEl.current) return;
-            if (e.code === "Enter") {
-                inputEl.current?.focus();
-                handleSetQuery("");
-            }
-        }
-
-        document.addEventListener("keydown", callback);
-        return () => document.addEventListener("keydown", callback);
-    }, [handleSetQuery]);
+    useKey("Enter", function () {
+        if (document.activeElement === inputEl.current) return;
+        inputEl.current?.focus();
+        handleSetQuery("");
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         handleSetQuery(e.target.value);

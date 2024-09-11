@@ -3,6 +3,7 @@ import { MovieDetailsType, WatchedData } from "../models/models";
 import Loader from "./Loader";
 import StarRating from "./StarRating";
 import ErrorMessage from "./ErrorMessage";
+import { useKey } from "../hooks/useKey";
 
 type Props = {
     selectedId: string;
@@ -87,17 +88,7 @@ export default function MovieDetails({
         };
     }, [movie]);
 
-    useEffect(() => {
-        const handleKeyPress = (e: KeyboardEvent) => {
-            if (e.code === "Escape") {
-                onCloseMovie();
-            }
-        };
-
-        document.addEventListener("keydown", handleKeyPress);
-
-        return () => document.removeEventListener("keydown", handleKeyPress);
-    }, [onCloseMovie]);
+    useKey("Escape", onCloseMovie);
 
     if (error.length) return <ErrorMessage message="Failed to fetch movie" />;
 

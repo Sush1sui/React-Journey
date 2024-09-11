@@ -9,6 +9,7 @@ import Loader from "./components/Loader";
 import ErrorMessage from "./components/ErrorMessage";
 import MovieDetails from "./components/MovieDetails";
 import { useMovies } from "./hooks/useMovies";
+import { useLocalStorageState } from "./hooks/useLocalStorageState";
 
 // const key = import.meta.env.VITE_OMDB_API_KEY as string;
 
@@ -18,11 +19,7 @@ const average = (arr: number[]) =>
 export default function App() {
     const [query, setQuery] = useState<string>("");
     // const [movies, setMovies] = useState<MovieDetailsType[]>([]);
-    const [watched, setWatched] = useState<WatchedData[]>(function () {
-        const storedValue = localStorage.getItem("watched");
-        if (storedValue) return JSON.parse(storedValue);
-        return [];
-    });
+    const [watched, setWatched] = useLocalStorageState([], "watched");
     const [isOpen1, setIsOpen1] = useState<boolean>(true);
     const [isOpen2, setIsOpen2] = useState<boolean>(true);
     // const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -65,10 +62,6 @@ export default function App() {
     const handleDeleteWatched = (id: string) => {
         setWatched((w) => w.filter((m) => m.imdbID !== id));
     };
-
-    useEffect(() => {
-        localStorage.setItem("watched", JSON.stringify(watched));
-    }, [watched]);
 
     const avgImdbRating: number = parseFloat(
         average(watched.map((movie) => movie.imdbRating)).toFixed(2)
