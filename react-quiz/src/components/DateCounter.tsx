@@ -1,52 +1,61 @@
-import React, { act, useReducer, useState } from "react";
+import React, { useReducer } from "react";
+
+const initialState: StateType = { count: 0, step: 1 };
 
 type Action =
     | { type: "inc"; payload: number }
     | { type: "dec"; payload: number }
-    | { type: "setCount"; payload: number };
+    | { type: "setCount"; payload: number }
+    | { type: "setStep"; payload: number }
+    | { type: "reset" };
 
-function reducer(state: number, action: Action) {
-    console.log(state, action);
-    if (action.type === "inc") return state + action.payload;
-    if (action.type === "dec") return state - action.payload;
-    if (action.type === "setCount") return action.payload;
-    return state;
+type StateType = { count: number; step: number };
+
+function reducer(state: StateType, action: Action) {
+    switch (action.type) {
+        case "dec":
+            return { ...state, count: state.count - state.step };
+        case "inc":
+            return { ...state, count: state.count + state.step };
+        case "setCount":
+            return { ...state, count: action.payload };
+        case "setStep":
+            return { ...state, step: action.payload };
+        case "reset":
+            return initialState;
+        default:
+            return state;
+    }
 }
 
 function DateCounter() {
-    // const [count, setCount] = useState(0);
-    const [count, dispatch] = useReducer(reducer, 0);
-    const [step, setStep] = useState(1);
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const { count, step } = state;
 
     // This mutates the date object.
     const date = new Date("june 21 2027");
     date.setDate(date.getDate() + count);
 
     const dec = function () {
-        dispatch({ type: "dec", payload: -1 });
-        // setCount((count) => count - 1);
-        // setCount((count) => count - step);
+        dispatch({ type: "dec", payload: step });
     };
 
     const inc = function () {
-        dispatch({ type: "inc", payload: 1 });
-        // setCount((count) => count + 1);
-        // setCount((count) => count + step);
+        dispatch({ type: "inc", payload: step });
     };
 
     const defineCount = function (e: React.ChangeEvent<HTMLInputElement>) {
         if (Number(e.target.value))
             dispatch({ type: "setCount", payload: Number(e.target.value) });
-        // setCount(Number(e.target.value));
     };
 
     const defineStep = function (e: React.ChangeEvent<HTMLInputElement>) {
-        setStep(Number(e.target.value));
+        if (Number(e.target.value))
+            dispatch({ type: "setStep", payload: Number(e.target.value) });
     };
 
     const reset = function () {
-        // setCount(0);
-        setStep(1);
+        dispatch({ type: "reset" });
     };
 
     return (
