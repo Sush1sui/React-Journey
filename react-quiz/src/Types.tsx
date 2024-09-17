@@ -27,4 +27,5 @@ export type ActionType =
       }
     | { type: "dataFailed" }
     | { type: "start" }
-    | { type: "newAnswer"; payload: number };
+    | { type: "newAnswer"; payload: number }
+    | { type: "nextQuestion" };
