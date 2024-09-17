@@ -1,5 +1,13 @@
-import React from "react";
+import { QuestionType } from "../Types";
+import Options from "./Options";
 
-export default function Question() {
-    return <div>Question</div>;
+type PropType = { question: QuestionType };
+
+export default function Question({ question }: PropType) {
+    return (
+        <div>
+            <h4>{question.question}</h4>
+            <Options options={question.options} />
+        </div>
+    );
 }
