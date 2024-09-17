@@ -15,6 +15,7 @@ export type QuestionType = {
 export type InitialStateType = {
     questions: QuestionType[];
     status: StateStatusType;
+    index: number;
 };
 
 export type ActionType =
