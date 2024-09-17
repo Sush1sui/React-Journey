@@ -5,6 +5,7 @@ import { ActionType, InitialStateType } from "./Types";
 import Loader from "./components/Loader";
 import ErrorComponent from "./components/Error";
 import StartScreen from "./components/StartScreen";
+import Question from "./components/Question";
 
 const initialState: InitialStateType = {
     questions: [],
@@ -26,6 +27,11 @@ function reducer(
             return {
                 ...state,
                 status: "error",
+            };
+        case "start":
+            return {
+                ...state,
+                status: "active",
             };
 
         default:
@@ -60,8 +66,12 @@ function App() {
                 {status === "loading" && <Loader />}
                 {status === "error" && <ErrorComponent />}
                 {status === "ready" && (
-                    <StartScreen numQuestions={numQuestions} />
+                    <StartScreen
+                        numQuestions={numQuestions}
+                        dispatch={dispatch}
+                    />
                 )}
+                {status === "active" && <Question />}
             </Main>
         </div>
     );

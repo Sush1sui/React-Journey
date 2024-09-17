@@ -22,4 +22,5 @@ export type ActionType =
           type: "dataReceived";
           payload: QuestionType[];
       }
-    | { type: "dataFailed" };
+    | { type: "dataFailed" }
+    | { type: "start" };
