@@ -18,6 +18,8 @@ export type InitialStateType = {
     index: number;
     answer: number | null;
     points: number;
+    highScore: number;
+    secondsRemaining: number | null;
 };
 
 export type ActionType =
@@ -28,4 +30,9 @@ export type ActionType =
     | { type: "dataFailed" }
     | { type: "start" }
     | { type: "newAnswer"; payload: number }
-    | { type: "nextQuestion" };
+    | { type: "nextQuestion" }
+    | { type: "finished" }
+    | { type: "restart" }
+    | { type: "tick" };
+
+export type EmojiType = "🥇" | "🎉" | "🙃" | "🤔" | "🤦‍♂️";
