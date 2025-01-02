@@ -1,12 +1,9 @@
-import React from "react";
+import { useContext } from "react";
+import { PostContext } from "../context/PostContext";
 
-export default function SearchPosts({
-  searchQuery,
-  setSearchQuery,
-}: {
-  searchQuery: string;
-  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
-}) {
+export default function SearchPosts() {
+  const { searchQuery, setSearchQuery } = useContext(PostContext)!;
+
   return (
     <input
       value={searchQuery}

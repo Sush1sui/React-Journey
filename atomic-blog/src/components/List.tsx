@@ -1,7 +1,9 @@
-import React from "react";
-import { PostType } from "../types";
+import { useContext } from "react";
+import { PostContext } from "../context/PostContext";
 
-export default function List({ posts }: { posts: PostType[] }) {
+export default function List() {
+  const { posts } = useContext(PostContext)!;
+
   return (
     <ul>
       {posts.map((post, i) => (

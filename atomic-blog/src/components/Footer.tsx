@@ -1,5 +1,10 @@
-import React from "react";
+import List from "./List";
 
 export default function Footer() {
-  return <footer>&copy; by The Atomic Blog ✌️</footer>;
+  return (
+    <footer>
+      <List />
+      &copy; by The Atomic Blog ✌️
+    </footer>
+  );
 }

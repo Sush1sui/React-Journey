@@ -1,6 +1,8 @@
-import React from "react";
-import { PostType } from "../types";
+import { useContext } from "react";
+import { PostContext } from "../context/PostContext";
 
-export default function Results({ posts }: { posts: PostType[] }) {
+export default function Results() {
+  const { posts } = useContext(PostContext)!;
+
   return <p>🚀 {posts.length} atomic posts found</p>;
 }

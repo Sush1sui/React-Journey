@@ -1,30 +1,19 @@
-import React from "react";
-import { PostType } from "../types";
+import { useContext } from "react";
 import SearchPosts from "./SearchPosts";
 import Results from "./Results";
+import { PostContext } from "../context/PostContext";
 
-export default function Header({
-  posts,
-  onClearPosts,
-  searchQuery,
-  setSearchQuery,
-}: {
-  posts: PostType[];
-  onClearPosts: () => void;
-  searchQuery: string;
-  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
-}) {
+export default function Header() {
+  const { onClearPosts } = useContext(PostContext)!;
+
   return (
     <header>
       <h1>
         <span>⚛️</span>The Atomic Blog
       </h1>
       <div>
-        <Results posts={posts} />
-        <SearchPosts
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
+        <Results />
+        <SearchPosts />
         <button onClick={onClearPosts}>Clear posts</button>
       </div>
     </header>
