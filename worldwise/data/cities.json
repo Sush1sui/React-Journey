@@ -35,6 +35,30 @@
         "lng": 13.376933665713324
       },
       "id": 98443197
+    },
+    {
+      "cityName": "Atlantic/Azores",
+      "country": "Portugal",
+      "emoji": "🇵🇹",
+      "date": "2025-01-07T03:19:24.998Z",
+      "notes": "asdasd",
+      "position": {
+        "lat": "38.685509760012025",
+        "lng": "-27.421875000000004"
+      },
+      "id": 98443198
+    },
+    {
+      "cityName": "Lajes do Pico",
+      "country": "Portugal",
+      "emoji": "🇵🇹",
+      "date": "2025-01-07T03:24:56.217Z",
+      "notes": "",
+      "position": {
+        "lat": "38.44498466889473",
+        "lng": "-28.256835937500004"
+      },
+      "id": 98443199
     }
   ]
 }

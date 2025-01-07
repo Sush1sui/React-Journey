@@ -8,6 +8,16 @@ interface CitiesContextType {
   isLoading: boolean;
   currentCity: TYPE_CITY | null;
   getCity: (id: number) => Promise<void>;
+  createCity: (newCity: NewCityType) => Promise<void>;
+}
+
+interface NewCityType {
+  cityName: string;
+  country: string;
+  emoji: string;
+  date: Date;
+  notes: string;
+  position: { lat: string | null; lng: string | null };
 }
 
 export const CitiesContext = createContext<CitiesContextType | null>(null);
@@ -48,6 +58,26 @@ export function CitiesProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  async function createCity(newCity: NewCityType) {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${BASE_URL}/cities`, {
+        method: "post",
+        body: JSON.stringify(newCity),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+
+      setCities((cities) => [...cities, data]);
+    } catch (error) {
+      alert("There was an error loading data...");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <CitiesContext.Provider
       value={{
@@ -55,6 +85,7 @@ export function CitiesProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         currentCity,
         getCity,
+        createCity,
       }}
     >
       {children}
