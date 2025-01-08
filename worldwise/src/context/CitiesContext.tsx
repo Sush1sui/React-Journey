@@ -9,6 +9,7 @@ interface CitiesContextType {
   currentCity: TYPE_CITY | null;
   getCity: (id: number) => Promise<void>;
   createCity: (newCity: NewCityType) => Promise<void>;
+  deleteCity: (id: number) => Promise<void>;
 }
 
 interface NewCityType {
@@ -72,7 +73,22 @@ export function CitiesProvider({ children }: { children: React.ReactNode }) {
 
       setCities((cities) => [...cities, data]);
     } catch (error) {
-      alert("There was an error loading data...");
+      alert("There was an error creating city...");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function deleteCity(id: number) {
+    try {
+      setIsLoading(true);
+      await fetch(`${BASE_URL}/cities/${id}`, {
+        method: "delete",
+      });
+
+      setCities((cities) => cities.filter((city) => city.id !== id));
+    } catch (error) {
+      alert("There was an error deleting city...");
     } finally {
       setIsLoading(false);
     }
@@ -86,6 +102,7 @@ export function CitiesProvider({ children }: { children: React.ReactNode }) {
         currentCity,
         getCity,
         createCity,
+        deleteCity,
       }}
     >
       {children}
