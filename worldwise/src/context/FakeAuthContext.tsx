@@ -1,20 +1,20 @@
 import React, { createContext, useContext, useReducer } from "react";
 
-interface AuthContextType {
-  user: object | null;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => void;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextType | null>(null);
-
 type UserType = {
   name: string;
   email: string;
   password: string;
   avatar: string;
 };
+
+interface AuthContextType {
+  user: UserType | null;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => void;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
 
 type ReducerStateType = {
   user: UserType | null;
