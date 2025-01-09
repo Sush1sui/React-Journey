@@ -1,22 +1,17 @@
-import { ActionType, QuestionType } from "../Types";
+import { useQuiz } from "../context/QuizContext";
 import Options from "./Options";
 
-type PropType = {
-    question: QuestionType;
-    dispatch: React.Dispatch<ActionType>;
-    answer: number | null;
-};
+export default function Question() {
+  const { index, questions, answer } = useQuiz();
 
-export default function Question({ question, dispatch, answer }: PropType) {
-    return (
-        <div>
-            <h4>{question.question}</h4>
-            <Options
-                options={question.options}
-                dispatch={dispatch}
-                answer={answer}
-                correctOption={question.correctOption}
-            />
-        </div>
-    );
+  return (
+    <div>
+      <h4>{questions[index].question}</h4>
+      <Options
+        options={questions[index].options}
+        answer={answer}
+        correctOption={questions[index].correctOption}
+      />
+    </div>
+  );
 }

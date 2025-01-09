@@ -1,19 +1,15 @@
-import React from "react";
-import { ActionType } from "../Types";
+import { useQuiz } from "../context/QuizContext";
 
-type PropType = { numQuestions: number; dispatch: React.Dispatch<ActionType> };
+export default function StartScreen() {
+  const { numQuestions, startQuiz } = useQuiz();
 
-export default function StartScreen({ numQuestions, dispatch }: PropType) {
-    return (
-        <div className="start">
-            <h2>Welcome to the React Quiz!</h2>
-            <h3>{numQuestions} question to test your React mastery</h3>
-            <button
-                className="btn btn-ui"
-                onClick={() => dispatch({ type: "start" })}
-            >
-                Let's start
-            </button>
-        </div>
-    );
+  return (
+    <div className="start">
+      <h2>Welcome to the React Quiz!</h2>
+      <h3>{numQuestions} question to test your React mastery</h3>
+      <button className="btn btn-ui" onClick={startQuiz}>
+        Let's start
+      </button>
+    </div>
+  );
 }

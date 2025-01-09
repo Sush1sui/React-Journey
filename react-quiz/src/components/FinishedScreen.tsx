@@ -1,45 +1,32 @@
-import React from "react";
-import { ActionType, EmojiType } from "../Types";
+import { EmojiType } from "../Types";
+import { useQuiz } from "../context/QuizContext";
 
-type PropType = {
-    points: number;
-    maxPossiblePoints: number;
-    highScore: number;
-    dispatch: React.Dispatch<ActionType>;
-};
+export default function FinishedScreen() {
+  const { points, maxPoints, highScore, restart } = useQuiz();
 
-export default function FinishedScreen({
-    points,
-    maxPossiblePoints,
-    highScore,
-    dispatch,
-}: PropType) {
-    const percentage = (points / maxPossiblePoints) * 100;
+  const percentage = (points / maxPoints) * 100;
 
-    let emoji: EmojiType = "🤦‍♂️";
-    if (percentage === 100) emoji = "🥇";
-    if (percentage >= 80) emoji = "🎉";
-    if (percentage >= 50 && percentage < 80) emoji = "🙃";
-    if (percentage > 0 && percentage < 50) emoji = "🤔";
-    if (percentage === 0) emoji = "🤦‍♂️";
+  let emoji: EmojiType = "🤦‍♂️";
+  if (percentage === 100) emoji = "🥇";
+  if (percentage >= 80) emoji = "🎉";
+  if (percentage >= 50 && percentage < 80) emoji = "🙃";
+  if (percentage > 0 && percentage < 50) emoji = "🤔";
+  if (percentage === 0) emoji = "🤦‍♂️";
 
-    return (
-        <>
-            <p className="result">
-                You scored <strong>{points}</strong> out of {maxPossiblePoints}{" "}
-                ({Math.ceil(percentage)}%)
-            </p>
+  return (
+    <>
+      <p className="result">
+        You scored <strong>{points}</strong> out of {maxPoints} (
+        {Math.ceil(percentage)}%)
+      </p>
 
-            <p className="highscore">
-                (Highscore: {highScore} points {emoji})
-            </p>
+      <p className="highscore">
+        (Highscore: {highScore} points {emoji})
+      </p>
 
-            <button
-                className="btn btn-ui"
-                onClick={() => dispatch({ type: "restart" })}
-            >
-                Restart quiz
-            </button>
-        </>
-    );
+      <button className="btn btn-ui" onClick={restart}>
+        Restart quiz
+      </button>
+    </>
+  );
 }

@@ -1,36 +1,33 @@
-import { ActionType } from "../Types";
+import { useQuiz } from "../context/QuizContext";
 
 type PropType = {
-    options: [string, string, string, string];
-    dispatch: React.Dispatch<ActionType>;
-    answer: number | null;
-    correctOption: number;
+  options: [string, string, string, string];
+  answer: number | null;
+  correctOption: number;
 };
 
-export default function Options({
-    options,
-    dispatch,
-    answer,
-    correctOption,
-}: PropType) {
-    const hasAnswered = answer !== null;
-    const answerResult = (i: number) => {
-        return hasAnswered ? (i === correctOption ? "correct" : "wrong") : "";
-    };
-    return (
-        <div className="options">
-            {options.map((option, i) => (
-                <button
-                    key={i}
-                    className={`btn btn-option ${
-                        i === answer ? "answer" : ""
-                    } ${answerResult(i)}`}
-                    disabled={hasAnswered}
-                    onClick={() => dispatch({ type: "newAnswer", payload: i })}
-                >
-                    {option}
-                </button>
-            ))}
-        </div>
-    );
+export default function Options({ options, answer, correctOption }: PropType) {
+  const { newAnswer } = useQuiz();
+
+  const hasAnswered = answer !== null;
+  const answerResult = (i: number) => {
+    return hasAnswered ? (i === correctOption ? "correct" : "wrong") : "";
+  };
+
+  return (
+    <div className="options">
+      {options.map((option, i) => (
+        <button
+          key={i}
+          className={`btn btn-option ${
+            i === answer ? "answer" : ""
+          } ${answerResult(i)}`}
+          disabled={hasAnswered}
+          onClick={() => newAnswer(i)}
+        >
+          {option}
+        </button>
+      ))}
+    </div>
+  );
 }

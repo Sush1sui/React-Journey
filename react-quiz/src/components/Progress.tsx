@@ -1,30 +1,18 @@
-import React from "react";
+import { useQuiz } from "../context/QuizContext";
 
-type PropType = {
-    i: number;
-    numQuestions: number;
-    points: number;
-    maxPoints: number;
-    answer: number | null;
-};
+export default function Progress() {
+  const { index, numQuestions, points, maxPoints, answer } = useQuiz();
 
-export default function Progress({
-    i,
-    numQuestions,
-    points,
-    maxPoints,
-    answer,
-}: PropType) {
-    return (
-        <header className="progress">
-            <progress max={numQuestions} value={i + Number(answer !== null)} />
+  return (
+    <header className="progress">
+      <progress max={numQuestions} value={index + Number(answer !== null)} />
 
-            <p>
-                Question <strong>{i + 1}</strong> {numQuestions}
-            </p>
-            <p>
-                <strong>{points}</strong> / {maxPoints}
-            </p>
-        </header>
-    );
+      <p>
+        Question <strong>{index + 1}</strong> {numQuestions}
+      </p>
+      <p>
+        <strong>{points}</strong> / {maxPoints}
+      </p>
+    </header>
+  );
 }
