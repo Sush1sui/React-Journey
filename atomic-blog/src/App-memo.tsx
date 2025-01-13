@@ -65,7 +65,11 @@ function App() {
         setSearchQuery={setSearchQuery}
       />
       <Main posts={searchedPosts} onAddPost={handleAddPost} />
-      <Archive archiveOptions={archiveOptions} />
+      <Archive
+        archiveOptions={archiveOptions}
+        onAddPost={handleAddPost}
+        setIsFakeDark={setIsFakeDark}
+      />
       <Footer />
     </section>
   );
@@ -186,11 +190,15 @@ function List({ posts }: { posts: PostType[] }) {
 
 const Archive = memo(function Archive({
   archiveOptions,
+  onAddPost,
+  setIsFakeDark,
 }: {
   archiveOptions: {
     show: boolean;
     title: string;
   };
+  onAddPost: (post: PostType) => void;
+  setIsFakeDark: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   // Here we don't need the setter function. We're only using state to store these posts because the callback function passed into useState (which generates the posts) is only called once, on the initial render. So we use this trick as an optimization technique, because if we just used a regular variable, these posts would be re-created on every render. We could also move the posts outside the components, but I wanted to show you this trick 😉
   const [posts] = useState(() =>
@@ -214,7 +222,7 @@ const Archive = memo(function Archive({
               <p>
                 <strong>{post.title}:</strong> {post.body}
               </p>
-              {/* <button onClick={() => onAddPost(post)}>Add as new post</button> */}
+              <button onClick={() => onAddPost(post)}>Add as new post</button>
             </li>
           ))}
         </ul>
