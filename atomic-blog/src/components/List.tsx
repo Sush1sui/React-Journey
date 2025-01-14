@@ -1,7 +1,8 @@
+import { memo } from "react";
 import { usePost } from "../context/PostContext";
-import Test from "../Test";
+// import Test from "../Test";
 
-export default function List() {
+const List = memo(function List() {
   const { posts } = usePost();
 
   return (
@@ -17,4 +18,6 @@ export default function List() {
       {/* <Test /> */}
     </>
   );
-}
+});
+
+export default List;
