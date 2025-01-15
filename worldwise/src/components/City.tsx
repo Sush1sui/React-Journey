@@ -8,17 +8,13 @@ import BackButton from "./BackButton";
 
 function City() {
   const { id } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
   const { getCity, currentCity, isLoading } = useCities();
 
   useEffect(() => {
     if (id && id !== undefined) {
       getCity(Number(id));
     }
-  }, [id]);
-
-  const lat = searchParams.get("lat");
-  const lng = searchParams.get("lng");
+  }, [id, getCity]);
 
   if (!currentCity) return null;
 
