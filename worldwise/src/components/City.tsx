@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styles from "./City.module.css";
 import { formatDate } from "./CityItem";
 import { useCities } from "../context/CitiesContext";
