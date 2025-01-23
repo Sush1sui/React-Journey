@@ -1,7 +1,12 @@
+import { legacy_createStore as createStore } from "redux";
+
 type ActionType =
   | { type: "account/deposit"; payload: number }
   | { type: "account/withdraw"; payload: number }
-  | { type: "account/requestLoan"; payload: number }
+  | {
+      type: "account/requestLoan";
+      payload: { amount: number; loanPurpose: string };
+    }
   | { type: "account/payLoan" };
 
 const initialState = {
@@ -20,8 +25,13 @@ function reducer(state = initialState, action: ActionType) {
 
     case "account/requestLoan":
       if (state.loan > 0) return state;
-      // LATER
-      return { ...state, loan: action.payload };
+
+      return {
+        ...state,
+        loan: action.payload.amount,
+        loanPurpose: action.payload.loanPurpose,
+        balance: state.balance + action.payload.amount,
+      };
 
     case "account/payLoan":
       return {
@@ -35,3 +45,21 @@ function reducer(state = initialState, action: ActionType) {
       return state;
   }
 }
+
+const store = createStore(reducer);
+
+store.dispatch({ type: "account/deposit", payload: 500 });
+console.log(store.getState());
+
+store.dispatch({ type: "account/withdraw", payload: 200 });
+console.log(store.getState());
+
+const loanObject = { amount: 1000, loanPurpose: "Buy a car" };
+store.dispatch({
+  type: "account/requestLoan",
+  payload: loanObject,
+});
+console.log(store.getState());
+
+store.dispatch({ type: "account/payLoan" });
+console.log(store.getState());
