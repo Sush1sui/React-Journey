@@ -1,5 +1,5 @@
 // TYPES
-type AccountActionType =
+export type AccountActionType =
   | { type: "account/deposit"; payload: number }
   | { type: "account/withdraw"; payload: number }
   | {

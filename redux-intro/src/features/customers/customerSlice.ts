@@ -1,5 +1,5 @@
 // TYPES
-type CustomerActionType =
+export type CustomerActionType =
   | {
       type: "customer/createCustomer";
       payload: { fullName: string; nationalID: string; createdAt: string };
