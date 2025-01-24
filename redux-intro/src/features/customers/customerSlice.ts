@@ -1,3 +1,5 @@
+import { ActionType } from "../../Store";
+
 // TYPES
 export type CustomerActionType =
   | {
@@ -6,17 +8,23 @@ export type CustomerActionType =
     }
   | { type: "customer/updateName"; payload: string };
 
+export type InitialCustomerStateType = {
+  fullName: string;
+  nationalID: string;
+  createdAt: string;
+};
+
 // STATE
-const initialStateCustomer = {
+const initialStateCustomer: InitialCustomerStateType = {
   fullName: "",
   nationalID: "",
   createdAt: "",
 };
 
 export default function customerReducer(
-  state = initialStateCustomer,
+  state: InitialCustomerStateType = initialStateCustomer,
   action: CustomerActionType
-) {
+): InitialCustomerStateType {
   switch (action.type) {
     case "customer/createCustomer":
       return {
@@ -41,19 +49,18 @@ export default function customerReducer(
 export function createCustomer(
   fullName: string,
   nationalID: string
-): {
-  type: "customer/createCustomer";
-  payload: { fullName: string; nationalID: string; createdAt: string };
-} {
+): ActionType<
+  "customer/createCustomer",
+  { fullName: string; nationalID: string; createdAt: string }
+> {
   return {
     type: "customer/createCustomer",
     payload: { nationalID, fullName, createdAt: new Date().toISOString() },
   };
 }
 
-export function updateName(fullName: string): {
-  type: "account/updateName";
-  payload: string;
-} {
-  return { type: "account/updateName", payload: fullName };
+export function updateName(
+  fullName: string
+): ActionType<"customer/updateName", string> {
+  return { type: "customer/updateName", payload: fullName };
 }

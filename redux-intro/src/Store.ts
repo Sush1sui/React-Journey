@@ -1,33 +1,26 @@
 import {
+  applyMiddleware,
   combineReducers,
   legacy_createStore as createStore,
-  Store,
 } from "redux";
-import accountReducer, {
-  AccountActionType,
-} from "./features/accounts/accountSlice";
-import customerReducer, {
-  CustomerActionType,
-} from "./features/customers/customerSlice";
+import { thunk, ThunkDispatch } from "redux-thunk";
+import accountReducer from "./features/accounts/accountSlice";
+import customerReducer from "./features/customers/customerSlice";
+import { AnyAction } from "redux";
 
-export type RootStateType = {
-  account: {
-    balance: number;
-    loan: number;
-    loanPurpose: string;
-  };
-  customer: {
-    fullName: string;
-    nationalID: string;
-    createdAt: string;
-  };
-};
-
+// Combine reducers
 const rootReducer = combineReducers({
   account: accountReducer,
   customer: customerReducer,
 });
-const store: Store<RootStateType, AccountActionType | CustomerActionType> =
-  createStore(rootReducer);
+
+// Infer RootStateType from rootReducer
+export type RootStateType = ReturnType<typeof rootReducer>;
+
+// Define AppDispatch to support thunk
+export type AppDispatch = ThunkDispatch<RootStateType, undefined, AnyAction>;
+
+// Create the store
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default store;

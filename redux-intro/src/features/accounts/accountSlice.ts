@@ -1,3 +1,6 @@
+import { Dispatch } from "redux";
+import { RootStateType } from "../../Store";
+
 // TYPES
 export type AccountActionType =
   | { type: "account/deposit"; payload: number }
@@ -6,22 +9,35 @@ export type AccountActionType =
       type: "account/requestLoan";
       payload: { amount: number; loanPurpose: string };
     }
-  | { type: "account/payLoan" };
+  | { type: "account/payLoan" }
+  | { type: "account/convertingCurrency" };
+
+export type InitialAccountStateType = {
+  balance: number;
+  loan: number;
+  loanPurpose: string;
+  isLoading: boolean;
+};
 
 // STATE
-const initialStateAccount = {
+const initialStateAccount: InitialAccountStateType = {
   balance: 0,
   loan: 0,
   loanPurpose: "",
+  isLoading: false,
 };
 
 export default function accountReducer(
-  state = initialStateAccount,
+  state: InitialAccountStateType = initialStateAccount,
   action: AccountActionType
-) {
+): InitialAccountStateType {
   switch (action.type) {
     case "account/deposit":
-      return { ...state, balance: state.balance + action.payload };
+      return {
+        ...state,
+        balance: state.balance + action.payload,
+        isLoading: false,
+      };
 
     case "account/withdraw":
       return { ...state, balance: state.balance - action.payload };
@@ -44,24 +60,38 @@ export default function accountReducer(
         balance: state.balance - state.loan,
       };
 
+    case "account/convertingCurrency":
+      return { ...state, isLoading: true };
+
     default:
       return state;
   }
 }
 
 // ACTION CREATORS
-export function deposit(amount: number): {
-  type: "account/deposit";
-  payload: number;
-} {
-  return { type: "account/deposit", payload: amount };
+export function deposit(amount: number, currency: string) {
+  if (currency === "USD") return { type: "account/deposit", payload: amount };
+
+  return async function (dispatch: Dispatch, _getState: () => RootStateType) {
+    dispatch({ type: "account/convertingCurrency" });
+
+    const res = await fetch(
+      `https://api.frankfurter.app/latest?amount=${amount}&from=${currency}&to=USD`
+    );
+    const data = await res.json();
+    const converted = data.rates.USD;
+
+    dispatch({ type: "account/deposit", payload: converted });
+  };
 }
+
 export function withdraw(amount: number): {
   type: "account/withdraw";
   payload: number;
 } {
   return { type: "account/withdraw", payload: amount };
 }
+
 export function requestLoan(
   amount: number,
   loanPurpose: string
@@ -74,6 +104,7 @@ export function requestLoan(
     payload: { amount, loanPurpose },
   };
 }
+
 export function payLoan(): { type: "account/payLoan" } {
   return { type: "account/payLoan" };
 }
