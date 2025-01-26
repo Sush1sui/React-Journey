@@ -1,4 +1,4 @@
-import { Dispatch } from "redux";
+import { Dispatch, Reducer } from "redux";
 import { RootStateType } from "../../Store";
 
 // TYPES
@@ -27,10 +27,10 @@ const initialStateAccount: InitialAccountStateType = {
   isLoading: false,
 };
 
-export default function accountReducer(
+const accountReducer: Reducer<InitialAccountStateType, AccountActionType> = (
   state: InitialAccountStateType = initialStateAccount,
   action: AccountActionType
-): InitialAccountStateType {
+): InitialAccountStateType => {
   switch (action.type) {
     case "account/deposit":
       return {
@@ -66,7 +66,7 @@ export default function accountReducer(
     default:
       return state;
   }
-}
+};
 
 // ACTION CREATORS
 export function deposit(amount: number, currency: string) {
@@ -108,3 +108,5 @@ export function requestLoan(
 export function payLoan(): { type: "account/payLoan" } {
   return { type: "account/payLoan" };
 }
+
+export default accountReducer;
