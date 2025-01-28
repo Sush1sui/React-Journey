@@ -15,7 +15,6 @@ function AccountOperations() {
   const {
     loan: currLoan,
     loanPurpose: currLoanPurpose,
-    balance,
     isLoading,
   } = useSelector((store: RootStateType) => store.account);
 
