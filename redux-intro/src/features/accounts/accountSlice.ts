@@ -1,18 +1,8 @@
-import { createSlice, Dispatch, Reducer } from "@reduxjs/toolkit";
+import { createSlice, Dispatch } from "@reduxjs/toolkit";
 import { RootStateType } from "../../Store";
 
 // TYPES
-export type AccountActionType =
-  | { type: "account/deposit"; payload: number }
-  | { type: "account/withdraw"; payload: number }
-  | {
-      type: "account/requestLoan";
-      payload: { amount: number; loanPurpose: string };
-    }
-  | { type: "account/payLoan" }
-  | { type: "account/convertingCurrency" };
-
-export type InitialAccountStateType = {
+type InitialAccountStateType = {
   balance: number;
   loan: number;
   loanPurpose: string;
@@ -51,7 +41,7 @@ const accountSlice = createSlice({
         state.balance += action.payload.amount;
       },
     },
-    payLoan(state, _action) {
+    payLoan(state) {
       state.balance -= state.loan;
       state.loan = 0;
       state.loanPurpose = "";

@@ -1,14 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 // TYPES
-export type CustomerActionType =
-  | {
-      type: "customer/createCustomer";
-      payload: { fullName: string; nationalID: string; createdAt: string };
-    }
-  | { type: "customer/updateName"; payload: string };
-
-export type InitialCustomerStateType = {
+type InitialCustomerStateType = {
   fullName: string;
   nationalID: string;
   createdAt: string;
