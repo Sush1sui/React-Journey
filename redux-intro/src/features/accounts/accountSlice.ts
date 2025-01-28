@@ -32,11 +32,11 @@ const accountSlice = createSlice({
   initialState: initialStateAccount,
   reducers: {
     deposit(state, action) {
-      state.balance += action.payload;
+      state.balance += Math.abs(action.payload);
       state.isLoading = false;
     },
     withdraw(state, action) {
-      state.balance -= action.payload;
+      state.balance -= Math.abs(action.payload);
     },
     requestLoan: {
       prepare(amount: number, purpose: string) {
