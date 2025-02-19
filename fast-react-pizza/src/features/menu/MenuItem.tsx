@@ -1,6 +1,7 @@
 import { formatCurrency } from "../../utils/helpers";
+import { PizzaType } from "./Menu";
 
-function MenuItem({ pizza }: { pizza: any }) {
+function MenuItem({ pizza }: { pizza: PizzaType }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
 
   return (
